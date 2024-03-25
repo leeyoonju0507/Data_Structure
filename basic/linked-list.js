@@ -118,7 +118,7 @@ linkedList.push(4);
 // linkedList.displayAll();
 
 // // 검색
-// console.log("검색:"+linkedList.at(2))
+console.log("검색:"+linkedList.at(2))
 //
 // // 삭제
 // linkedList.delete(2);
