@@ -45,18 +45,31 @@ class LinkedList {
     }
 
     delete(index){
-        //지우려는 노드의 이전 노드의 next를 다음 노드로 연결
+        //지우려는 노드의 이전 노드의 next를 지우려는 노드의 다음 노드로 연결, 지우려는 노드의 다음 노드의 prev를 지우려는 노드의 이전 노드로 연결
         let node = this.firstNode;
         let cnt = 0;
         while(true){
             if(node===null){
-                console.log('노드 없음');
-                return;
+                console.log('인덱스를 다시 입력하세요')
+                break;
             }
             if(cnt===index){
-                let frontNode = node.prev;
-                frontNode.next = node.next;
-                node.prev = frontNode;
+                //지워야하는 node가 첫번째일때
+                if(node.prev===null){
+                    this.firstNode = node.next  
+                }
+                //지워야하는 node가 마지막일때
+                else if(node.next===null){
+                    const BeforeNode = node.prev
+                    BeforeNode.next = null
+                }
+                //지원야하는 node가 중간일때
+                else if(node.prev!==null&&node.next!==null){
+                    const BeforeNode = node.prev;
+                    const AfterNode = node.next;
+                    BeforeNode.next = AfterNode;
+                    AfterNode.prev = BeforeNode;
+                }
                 this.displayAll()
                 break;
             }
@@ -70,23 +83,30 @@ class LinkedList {
         let cnt = 0;
         const newNode = new Node(insertNum);
         while(true){
-            if(node===null){
-                console.log('노드 없음');
+            //newNode를 첫번째 노드로 삽입할때
+            if(index===0){
+                this.firstNode = newNode;
+                this.firstNode.next = node;
+                node.prev = this.firstNode
                 break;
             }
-            if(cnt === index){
-                const frontNode = node.prev;
-                frontNode.next = newNode;
-                newNode.prev = frontNode;
-                newNode.next = node
-                node.prev = newNode
-                this.displayAll();
+            //newNode를 중간 노드로 삽입할때
+            else if(cnt === index){
+                const beforeNode = node.prev;
+                beforeNode.next = newNode;
+                newNode.prev = beforeNode;
+                newNode.next = node;
+                break;
+            }
+            //newNode를 마지막 노드로 삽입할때
+            else if(node.next===null){
+                node.next = newNode;
                 break;
             }
             node = node.next;
             cnt++;
         }
-
+        this.displayAll();
     }
 
     displayAll() {
@@ -95,7 +115,6 @@ class LinkedList {
             console.log("빈 배열입니다")
             return;
         }
-
         while (true) {
             console.log(node.data);
             if (node.next === null) {
@@ -118,10 +137,10 @@ linkedList.push(4);
 // linkedList.displayAll();
 
 // // 검색
-console.log("검색:"+linkedList.at(2))
+// console.log("검색:"+linkedList.at(3))
 //
 // // 삭제
-// linkedList.delete(2);
+// linkedList.delete(3);
 //
 // // 삽입
-linkedList.insert(2, 10);
+// linkedList.insert(0, 10);

@@ -36,11 +36,10 @@ class BinaryTree {
 
     // 추가
     pushLeft(parentData, childData) {
-        const node = this.findNode(parentData)
+        const node = this.findNode(parentData);
         if (node === null) {
             return;
         }
-
         node.leftChild = new Node(childData);
     }
 
@@ -50,7 +49,6 @@ class BinaryTree {
         if (node === null) {
             return;
         }
-
         node.rightChild = new Node(childData);
     }
 
@@ -64,10 +62,10 @@ class BinaryTree {
             parentNode = this.rootNode;
         }
         console.log(parentNode.data);
-        this.preOrder(parentNode.leftChild)
-        this.preOrder(parentNode.rightChild)
+        this.preOrder(parentNode.leftChild);
+        this.preOrder(parentNode.rightChild);
     }
-
+    
     inOrder(parentNode) {
         // 왼쪽재귀, 출력, 오른쪽재귀
         if (parentNode === null) {
@@ -97,10 +95,96 @@ class BinaryTree {
     }
 
     // 검색
-    findNode(searchData, parentNode) {}
-
+    findNode(searchData, parentNode) {
+        // if(parentNode === undefined){
+        //     parentNode = this.rootNode;
+        // }
+        // if(searchData === parentNode.data){
+        //     return parentNode;
+        // }
+        // this.findNode(searchData,parentNode.leftChild);
+        // this.findNode(searchData,parentNode.rightChild);
+        if(parentNode === undefined){
+            parentNode = this.rootNode;
+        }
+        if(searchData === parentNode.data){
+            return parentNode;
+        }
+        if (parentNode.leftChild !== null) {
+            const leftResult = this.findNode(searchData, parentNode.leftChild);
+            if (leftResult !== null) {
+                return leftResult;
+            }
+        }
+        if (parentNode.rightChild !== null) {
+            const rightResult = this.findNode(searchData, parentNode.rightChild);
+            if (rightResult !== null) {
+                return rightResult;
+            }
+        }
+        return null;
+    }
     // 삭제
-
+    deleteNode(searchData, parentNode){
+        if(parentNode === undefined){
+            parentNode = this.rootNode;
+        }
+        //부모노드의 왼쪽 자식노드에서 삭제할 데이터를 찾으면
+        if(parentNode.leftChild !== null && searchData === parentNode.leftChild.data){
+            const deleteNode = parentNode.leftChild
+            //삭제할 노드의 자식이 0개인지 1개인지 2개인지
+            //자식 0개
+            if(deleteNode.leftChild===null && deleteNode.rightChild===null){
+                parentNode.leftChild = null;
+            }
+            //자식 1개
+            if(deleteNode.leftChild!==null && deleteNode.rightChild===null){
+                if(deleteNode.leftChild!==null && deleteNode.rightChild===null){
+                    parentNode.leftChild = deleteNode.leftChild;
+                }
+            }
+            if(deleteNode.leftChild===null && deleteNode.rightChild!==null){
+                if(deleteNode.leftChild===null && deleteNode.rightChild!==null){
+                    parentNode.leftChild = deleteNode.rightChild;
+                }
+            }
+            //자식 2개
+            if(deleteNode.leftChild!==null && deleteNode.rightChild!==null){
+                parentNode.leftChild = deleteNode.rightChild;
+                let node = parentNode.leftChild;
+                while (node.leftChild !== null) {
+                    node = node.leftChild;
+                }
+                node.leftChild = deleteNode.leftChild;
+            }
+        }else if (parentNode.rightChild !== null && searchData === parentNode.rightChild.data) {
+            const deleteNode = parentNode.rightChild;
+            
+            // 자식 0개
+            if (deleteNode.leftChild === null && deleteNode.rightChild === null) {
+                parentNode.rightChild = null;
+            }
+            // 자식 1개
+            else if (deleteNode.leftChild !== null && deleteNode.rightChild === null) {
+                parentNode.rightChild = deleteNode.leftChild;
+            }
+            else if (deleteNode.leftChild === null && deleteNode.rightChild !== null) {
+                parentNode.rightChild = deleteNode.rightChild;
+            }
+            // 자식 2개
+            else if (deleteNode.leftChild !== null && deleteNode.rightChild !== null) {
+            }
+        }
+        //parentNode의 자식중에서 deleteNode를 찾지못할때
+        else{
+            if(parentNode.leftChild!==null){
+                this.deleteNode(searchData,parentNode.leftChild);
+            }
+            if(parentNode.rightChild!==null){
+                this.deleteNode(searchData,parentNode.rightChild);
+            }
+        }        
+    }
     // 삽입
 }
 
@@ -111,41 +195,42 @@ bt.pushLeft(5, 1);
 bt.pushLeft(3, 9);
 bt.pushRight(9, 6);
 
-// bt.preOrder();
+bt.deleteNode(3);
+bt.preOrder();
+
 // bt.inOrder();
 // bt.postOrder();
 
-// 특별히 complete binary tree는 배열로 바꿔서 표현할 수 있다
-// 즉, cbt1 = cbt2
-const cbt1 = new BinaryTree(4);
-cbt1.pushLeft(4, 5);
-cbt1.pushRight(4, 3);
-cbt1.pushLeft(5, 1);
-cbt1.pushLeft(5, 9);
-cbt1.pushRight(3, 6);
+// // // 특별히 complete binary tree는 배열로 바꿔서 표현할 수 있다
+// // // 즉, cbt1 = cbt2
+// const cbt1 = new BinaryTree(4);
+// cbt1.pushLeft(4, 5);
+// cbt1.pushRight(4, 3);
+// cbt1.pushLeft(5, 1);
+// cbt1.pushLeft(5, 9);
+// cbt1.pushLeft(3, 6);
 
-class CompleteBinaryTree {
-    treeList
+// class CompleteBinaryTree {
+//     treeList
 
-    constructor(...treeList) {
-        this.treeList = treeList
-    }
+//     constructor(...treeList) {
+//         this.treeList = treeList
+//     }
 
-    // 순회: 프리오더, 인오더, 포스트오더
-    preOrder(parentIndex) {
-        // 출력, 왼쪽재귀, 오른쪽재귀
-        if (this.treeList.length - 1 < parentIndex) {
-            return;
-        }
+//     // 순회: 프리오더, 인오더, 포스트오더
+//     preOrder(parentIndex) {
+//         // 출력, 왼쪽재귀, 오른쪽재귀
+//         if (this.treeList.length - 1 < parentIndex) {
+//             return;
+//         }
 
-        if (parentIndex === undefined) {
-            parentIndex = 0;
-        }
-        console.log(this.treeList[parentIndex]);
-        this.preOrder(parentIndex * 2 + 1)
-        this.preOrder(parentIndex * 2 + 2)
-    }
-}
-
-const cbt2 = new CompleteBinaryTree(4, 5, 3, 1, 9, 6)
-cbt2.preOrder()
+//         if (parentIndex === undefined) {
+//             parentIndex = 0;
+//         }
+//         console.log(this.treeList[parentIndex]);
+//         this.preOrder(parentIndex * 2 + 1)
+//         this.preOrder(parentIndex * 2 + 2)
+//     }
+// }
+// const cbt2 = new CompleteBinaryTree(4, 5, 3, 1, 9, 6)
+// cbt2.preOrder()
