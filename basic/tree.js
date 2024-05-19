@@ -151,7 +151,7 @@ class BinaryTree {
             //자식 2개
             if(deleteNode.leftChild!==null && deleteNode.rightChild!==null){
                 parentNode.leftChild = deleteNode.rightChild;
-                let node = parentNode.leftChild;
+                let node = deleteNode.rightChild;
                 while (node.leftChild !== null) {
                     node = node.leftChild;
                 }
@@ -173,6 +173,12 @@ class BinaryTree {
             }
             // 자식 2개
             else if (deleteNode.leftChild !== null && deleteNode.rightChild !== null) {
+                parentNode.rightChild = deleteNode.rightChild;
+                let node = deleteNode.rightChild;
+                while (node.leftChild !== null) {
+                    node = node.leftChild;
+                }
+                node.leftChild = deleteNode.leftChild;
             }
         }
         //parentNode의 자식중에서 deleteNode를 찾지못할때
@@ -193,9 +199,10 @@ bt.pushLeft(4, 5);
 bt.pushRight(4, 3);
 bt.pushLeft(5, 1);
 bt.pushLeft(3, 9);
-bt.pushRight(9, 6);
+bt.pushRight(3, 6);
+bt.pushRight(5, 2);
 
-bt.deleteNode(3);
+// bt.deleteNode(3);
 bt.preOrder();
 
 // bt.inOrder();
